@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kid-Safe Apps Suite - Prototypes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .app-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .app-card h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .app-card p {
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .app-status {
+            text-align: center;
+            padding: 8px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-building {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .footer {
+            margin-top: 50px;
+            color: white;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎮 Kid-Safe Apps Suite</h1>
+        <p>Interactive Prototypes - Safe, Fun, Educational</p>
+    </div>
+
+    <div class="apps-grid">
+        <a href="kid-safe-shop-tracker/index.html" class="app-card">
+            <div class="app-icon">💰</div>
+            <h2>Kid-Safe Shop Tracker</h2>
+            <p>Track allowance, savings goals, and wishlist items with visual progress bars.</p>
+            <div class="app-status status-building">Building...</div>
+        </a>
+
+        <a href="bake-and-sell-helper/index.html" class="app-card">
+            <div class="app-icon">🧁</div>
+            <h2>Bake & Sell Helper</h2>
+            <p>Recipe calculator, sales tracking, and profit analysis for young entrepreneurs.</p>
+            <div class="app-status status-building">Building...</div>
+        </a>
+
+        <a href="my-closet-builder/index.html" class="app-card">
+            <div class="app-icon">👗</div>
+            <h2>My Closet Builder</h2>
+            <p>Mix & match fashion game with wardrobe catalog and wishlist.</p>
+            <div class="app-status status-building">Building...</div>
+        </a>
+
+        <a href="mini-missions-app/index.html" class="app-card">
+            <div class="app-icon">🎯</div>
+            <h2>Mini Missions</h2>
+            <p>Gamified chore tracker with coin rewards and achievement system.</p>
+            <div class="app-status status-building">Building...</div>
+        </a>
+
+        <a href="cookie-tycoon-mini/index.html" class="app-card">
+            <div class="app-icon">🍪</div>
+            <h2>Cookie Tycoon Mini</h2>
+            <p>Run a virtual bakery, bake cookies, and sell them in fun events.</p>
+            <div class="app-status status-building">Building...</div>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>All apps are offline-first, COPPA compliant, and designed for ages 8-12</p>
+        <p style="margin-top: 10px;">© 2025 Kid-Safe Apps Suite</p>
+    </div>
+</body>
+</html>

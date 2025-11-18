@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Kid-Safe Shop Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Dashboard View -->
+    <div id="dashboard-view" class="view active">
+        <header class="header">
+            <h1>💰 MY SAVINGS TRACKER</h1>
+        </header>
+
+        <div class="container">
+            <div class="balance-card">
+                <h2>Total Saved</h2>
+                <div class="balance-amount" id="balance-amount">$0.00</div>
+            </div>
+
+            <div class="allowance-info">
+                <h3>📅 Next Allowance</h3>
+                <p id="allowance-countdown">in <span id="days-until">0</span> days</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="allowance-progress"></div>
+                </div>
+                <p class="allowance-amount">$<span id="weekly-allowance">5.00</span> coming</p>
+            </div>
+
+            <div class="quick-actions">
+                <button class="btn btn-primary" onclick="showView('wishlist-view')">📝 WISHLIST</button>
+                <button class="btn btn-primary" onclick="showView('add-money-view')">➕ ADD MONEY</button>
+                <button class="btn btn-primary" onclick="showView('allowance-view')">📊 ALLOWANCE</button>
+                <button class="btn btn-secondary" onclick="showView('settings-view')">⚙️ SETTINGS</button>
+            </div>
+
+            <div class="goals-section">
+                <h3>🎯 My Goals</h3>
+                <div id="goals-list"></div>
+                <p class="empty-state" id="empty-goals" style="display:none;">
+                    No goals yet! Add items to your wishlist to start saving.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist View -->
+    <div id="wishlist-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>📝 WISHLIST</h1>
+        </header>
+
+        <div class="container">
+            <button class="btn btn-primary btn-large" onclick="showView('add-item-view')">
+                ➕ ADD NEW ITEM
+            </button>
+
+            <div id="wishlist-items"></div>
+            <p class="empty-state" id="empty-wishlist" style="display:none;">
+                Your wishlist is empty. Add your first item!
+            </p>
+        </div>
+    </div>
+
+    <!-- Add Item View -->
+    <div id="add-item-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('wishlist-view')">← BACK</button>
+            <h1>ADD TO WISHLIST</h1>
+        </header>
+
+        <div class="container">
+            <form id="add-item-form" class="form">
+                <div class="form-group">
+                    <label>Item Name:</label>
+                    <input type="text" id="item-name" required placeholder="e.g., Video Game">
+                </div>
+
+                <div class="form-group">
+                    <label>Price: $</label>
+                    <input type="number" id="item-price" step="0.01" min="0.01" required placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label>Store (optional):</label>
+                    <input type="text" id="item-store" placeholder="e.g., Target">
+                </div>
+
+                <div class="form-group">
+                    <label>Category:</label>
+                    <select id="item-category">
+                        <option value="toys">🎮 Toys & Games</option>
+                        <option value="clothes">👕 Clothes</option>
+                        <option value="books">📚 Books</option>
+                        <option value="other">✨ Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    SAVE TO WISHLIST
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Item Detail View -->
+    <div id="item-detail-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('wishlist-view')">← BACK</button>
+            <h1 id="detail-icon">🎮</h1>
+        </header>
+
+        <div class="container">
+            <div class="item-detail-card">
+                <h2 id="detail-name">Item Name</h2>
+                <p class="detail-info">
+                    <strong>Price:</strong> $<span id="detail-price">0.00</span><br>
+                    <strong>Store:</strong> <span id="detail-store">-</span>
+                </p>
+
+                <h3>Progress:</h3>
+                <div class="progress-bar large">
+                    <div class="progress-fill" id="detail-progress"></div>
+                </div>
+                <div class="progress-stats">
+                    <p>Saved: $<span id="detail-saved">0.00</span></p>
+                    <p>Need: $<span id="detail-need">0.00</span></p>
+                </div>
+
+                <div class="time-estimate" id="detail-time-estimate"></div>
+
+                <div class="button-group">
+                    <button class="btn btn-danger" onclick="deleteItem()">🗑️ DELETE</button>
+                    <button class="btn btn-success" onclick="purchaseItem()">✅ MARK PURCHASED</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Money View -->
+    <div id="add-money-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>➕ ADD MONEY</h1>
+        </header>
+
+        <div class="container">
+            <form id="add-money-form" class="form">
+                <div class="form-group">
+                    <label>Amount: $</label>
+                    <input type="number" id="money-amount" step="0.01" min="0.01" required placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label>Source:</label>
+                    <select id="money-source">
+                        <option value="allowance">📅 Allowance</option>
+                        <option value="gift">🎁 Gift</option>
+                        <option value="chore">🧹 Extra Chore</option>
+                        <option value="other">✨ Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Note (optional):</label>
+                    <input type="text" id="money-note" placeholder="e.g., Birthday money">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    ADD TO SAVINGS
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Allowance View -->
+    <div id="allowance-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>📊 ALLOWANCE TRACKER</h1>
+        </header>
+
+        <div class="container">
+            <div class="allowance-card">
+                <h3>Weekly Allowance: $<span id="current-allowance">5.00</span></h3>
+                <p>Next Payment: <span id="next-payment-date">Sunday</span></p>
+
+                <h4>⏰ Countdown</h4>
+                <div class="countdown" id="countdown-display">0 days</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="week-progress"></div>
+                </div>
+            </div>
+
+            <h3>📊 This Month</h3>
+            <div id="allowance-history"></div>
+
+            <h3>🎁 Bonuses This Month</h3>
+            <div id="bonus-history"></div>
+        </div>
+    </div>
+
+    <!-- Settings View -->
+    <div id="settings-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>⚙️ SETTINGS</h1>
+        </header>
+
+        <div class="container">
+            <form id="settings-form" class="form">
+                <div class="form-group">
+                    <label>Weekly Allowance: $</label>
+                    <input type="number" id="settings-allowance" step="0.01" min="0" placeholder="5.00">
+                </div>
+
+                <div class="form-group">
+                    <label>Allowance Day:</label>
+                    <select id="settings-day">
+                        <option value="0">Sunday</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    SAVE SETTINGS
+                </button>
+            </form>
+
+            <div class="danger-zone">
+                <h3>⚠️ Danger Zone</h3>
+                <button class="btn btn-danger" onclick="resetApp()">
+                    RESET ALL DATA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

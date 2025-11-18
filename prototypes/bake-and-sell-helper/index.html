@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧁 Bake & Sell Helper</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Dashboard View -->
+    <div id="dashboard-view" class="view active">
+        <header class="header">
+            <h1>🧁 BAKE & SELL HELPER</h1>
+        </header>
+
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card green">
+                    <h3>Sales</h3>
+                    <div class="stat-amount" id="total-sales">$0.00</div>
+                </div>
+                <div class="stat-card red">
+                    <h3>Costs</h3>
+                    <div class="stat-amount" id="total-costs">$0.00</div>
+                </div>
+                <div class="stat-card gold">
+                    <h3>Profit</h3>
+                    <div class="stat-amount" id="total-profit">$0.00</div>
+                </div>
+            </div>
+
+            <div class="period-selector">
+                <button onclick="setPeriod('week')" class="period-btn active" id="btn-week">This Week</button>
+                <button onclick="setPeriod('month')" class="period-btn" id="btn-month">This Month</button>
+                <button onclick="setPeriod('all')" class="period-btn" id="btn-all">All Time</button>
+            </div>
+
+            <div class="quick-actions">
+                <button class="btn btn-primary" onclick="showView('recipe-view')">
+                    📝 MAKE RECIPE
+                </button>
+                <button class="btn btn-primary" onclick="showView('add-sale-view')">
+                    💵 ADD SALE
+                </button>
+                <button class="btn btn-primary" onclick="showView('shopping-list-view')">
+                    🛒 SHOPPING LIST
+                </button>
+                <button class="btn btn-primary" onclick="showView('best-sellers-view')">
+                    📊 BEST SELLERS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Calculator View -->
+    <div id="recipe-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>📝 RECIPE CALCULATOR</h1>
+        </header>
+
+        <div class="container">
+            <div class="form">
+                <div class="form-group">
+                    <label>Choose Recipe:</label>
+                    <select id="recipe-select" onchange="updateRecipeDisplay()">
+                        <option value="chocolate-chip">Chocolate Chip Cookies</option>
+                        <option value="sugar">Sugar Cookies</option>
+                        <option value="oatmeal">Oatmeal Raisin</option>
+                        <option value="brownies">Brownies</option>
+                        <option value="cupcakes">Cupcakes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>How many do you need?</label>
+                    <input type="number" id="recipe-quantity" value="24" min="1" oninput="updateRecipeDisplay()">
+                    <span id="recipe-unit">cookies</span>
+                </div>
+
+                <div class="recipe-card" id="recipe-display">
+                    <!-- Recipe ingredients will be populated here -->
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="addToShoppingList()">
+                    📋 ADD TO SHOPPING LIST
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Sale View -->
+    <div id="add-sale-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>💵 ADD SALE</h1>
+        </header>
+
+        <div class="container">
+            <form id="add-sale-form" class="form">
+                <div class="form-group">
+                    <label>What did you sell?</label>
+                    <select id="sale-product">
+                        <option value="chocolate-chip">Chocolate Chip Cookies</option>
+                        <option value="sugar">Sugar Cookies</option>
+                        <option value="oatmeal">Oatmeal Raisin</option>
+                        <option value="brownies">Brownies</option>
+                        <option value="cupcakes">Cupcakes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>How many?</label>
+                    <input type="number" id="sale-quantity" value="12" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Price per item: $</label>
+                    <input type="number" id="sale-price" value="1.00" step="0.01" min="0.01" required>
+                </div>
+
+                <div class="total-display">
+                    Total: <span id="sale-total">$12.00</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Customer (optional):</label>
+                    <input type="text" id="sale-customer" placeholder="e.g., Mrs. Johnson">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    SAVE SALE
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shopping List View -->
+    <div id="shopping-list-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>🛒 SHOPPING LIST</h1>
+        </header>
+
+        <div class="container">
+            <div class="shopping-controls">
+                <button class="btn btn-secondary" onclick="clearChecked()">
+                    CLEAR CHECKED
+                </button>
+                <button class="btn btn-primary" onclick="addCustomItem()">
+                    + ADD CUSTOM
+                </button>
+            </div>
+
+            <div id="shopping-list">
+                <p class="empty-state">Shopping list is empty. Add items from the recipe calculator!</p>
+            </div>
+
+            <div class="shopping-footer">
+                <button class="btn btn-danger" onclick="clearShoppingList()">
+                    CLEAR ALL
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Best Sellers View -->
+    <div id="best-sellers-view" class="view">
+        <header class="header">
+            <button class="back-btn" onclick="showView('dashboard-view')">← BACK</button>
+            <h1>📊 BEST SELLERS</h1>
+        </header>
+
+        <div class="container">
+            <div id="best-sellers-list"></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

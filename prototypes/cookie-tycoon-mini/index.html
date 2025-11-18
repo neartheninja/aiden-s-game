@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍪 Cookie Tycoon Mini</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffeaa7 0%, #ff7675 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .stat-label { color: #666; font-size: 0.9em; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #ff7675; }
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 15px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .tab.active { background: #ff7675; color: white; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .bake-area {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .cookie-display {
+            font-size: 5em;
+            margin: 30px 0;
+        }
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #ff7675, #ffeaa7);
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .recipe-btn {
+            padding: 15px;
+            margin: 10px;
+            background: white;
+            border: 2px solid #ff7675;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s;
+        }
+        .recipe-btn:hover {
+            background: #ff7675;
+            transform: scale(1.05);
+        }
+        .recipe-btn.selected { background: #ff7675; }
+        .btn {
+            padding: 15px 30px;
+            background: #ff7675;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover { background: #e66767; transform: translateY(-2px); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        .upgrade-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .upgrade-info h3 { margin-bottom: 5px; }
+        .upgrade-info p { color: #666; font-size: 0.9em; }
+        .customer {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .inventory {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍪 COOKIE TYCOON MINI</h1>
+            <p>Build your cookie empire!</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Coins</div>
+                <div class="stat-value">🪙 <span id="coins">50</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Level</div>
+                <div class="stat-value">⭐ <span id="level">1</span></div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('bake')">🍪 BAKE</button>
+            <button class="tab" onclick="showTab('sell')">🏪 SELL</button>
+            <button class="tab" onclick="showTab('upgrades')">⬆️ UPGRADES</button>
+        </div>
+
+        <!-- Bake Tab -->
+        <div id="bake" class="view active">
+            <div class="bake-area">
+                <h3>Choose Recipe</h3>
+                <div>
+                    <button class="recipe-btn" onclick="selectRecipe('🍪', 'Chocolate Chip')">🍪</button>
+                    <button class="recipe-btn" onclick="selectRecipe('🧁', 'Cupcake')">🧁</button>
+                    <button class="recipe-btn" onclick="selectRecipe('🥧', 'Pie')">🥧</button>
+                </div>
+
+                <div class="cookie-display" id="cookie-display">🍪</div>
+                <h3 id="recipe-name">Chocolate Chip Cookie</h3>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="bake-progress" style="width: 0%">0%</div>
+                </div>
+
+                <button class="btn" id="bake-btn" onclick="startBaking()">START BAKING</button>
+            </div>
+
+            <div class="inventory">
+                <h3>Inventory</h3>
+                <div id="inventory-list"></div>
+            </div>
+        </div>
+
+        <!-- Sell Tab -->
+        <div id="sell" class="view">
+            <div id="customers-area"></div>
+        </div>
+
+        <!-- Upgrades Tab -->
+        <div id="upgrades" class="view">
+            <div id="upgrades-list"></div>
+        </div>
+    </div>
+
+    <script>
+        let gameData = {
+            coins: 50,
+            level: 1,
+            xp: 0,
+            inventory: {},
+            upgrades: {
+                ovenSpeed: 1,
+                batchSize: 1
+            }
+        };
+
+        const recipes = {
+            '🍪': { name: 'Chocolate Chip Cookie', time: 3000, xp: 5 },
+            '🧁': { name: 'Cupcake', time: 5000, xp: 10 },
+            '🥧': { name: 'Pie', time: 8000, xp: 15 }
+        };
+
+        let currentRecipe = '🍪';
+        let baking = false;
+        let customers = [];
+
+        function loadData() {
+            const saved = localStorage.getItem('cookieTycoonData');
+            if (saved) gameData = JSON.parse(saved);
+            updateUI();
+        }
+
+        function saveData() {
+            localStorage.setItem('cookieTycoonData', JSON.stringify(gameData));
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'sell') generateCustomers();
+            if (tab === 'upgrades') renderUpgrades();
+        }
+
+        function selectRecipe(emoji, name) {
+            currentRecipe = emoji;
+            document.getElementById('cookie-display').textContent = emoji;
+            document.getElementById('recipe-name').textContent = recipes[emoji].name;
+
+            document.querySelectorAll('.recipe-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function startBaking() {
+            if (baking) return;
+
+            baking = true;
+            const recipe = recipes[currentRecipe];
+            const time = recipe.time / gameData.upgrades.ovenSpeed;
+            const startTime = Date.now();
+
+            document.getElementById('bake-btn').disabled = true;
+
+            const interval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min((elapsed / time) * 100, 100);
+
+                document.getElementById('bake-progress').style.width = progress + '%';
+                document.getElementById('bake-progress').textContent = Math.round(progress) + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    completeBake();
+                }
+            }, 100);
+        }
+
+        function completeBake() {
+            const recipe = recipes[currentRecipe];
+            const amount = gameData.upgrades.batchSize;
+
+            gameData.inventory[currentRecipe] = (gameData.inventory[currentRecipe] || 0) + amount;
+            gameData.xp += recipe.xp;
+
+            // Level up check
+            if (gameData.xp >= gameData.level * 20) {
+                gameData.level++;
+                gameData.xp = 0;
+                alert(`🎉 Level up! You're now level ${gameData.level}!`);
+            }
+
+            baking = false;
+            document.getElementById('bake-btn').disabled = false;
+            document.getElementById('bake-progress').style.width = '0%';
+            document.getElementById('bake-progress').textContent = '0%';
+
+            saveData();
+            updateUI();
+
+            alert(`✓ Baked ${amount} ${recipes[currentRecipe].name}!`);
+        }
+
+        function updateUI() {
+            document.getElementById('coins').textContent = gameData.coins;
+            document.getElementById('level').textContent = gameData.level;
+
+            // Update inventory
+            const invList = document.getElementById('inventory-list');
+            if (Object.keys(gameData.inventory).length === 0) {
+                invList.innerHTML = '<p>No cookies yet! Start baking!</p>';
+            } else {
+                invList.innerHTML = Object.entries(gameData.inventory).map(([emoji, count]) => `
+                    <div style="display:flex; justify-content:space-between; padding:10px 0;">
+                        <span>${emoji} ${recipes[emoji].name}</span>
+                        <strong>${count}</strong>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function generateCustomers() {
+            const area = document.getElementById('customers-area');
+
+            if (Object.keys(gameData.inventory).length === 0) {
+                area.innerHTML = '<div class="customer"><p>Bake some cookies first!</p></div>';
+                return;
+            }
+
+            const availableItems = Object.keys(gameData.inventory).filter(k => gameData.inventory[k] > 0);
+            if (availableItems.length === 0) {
+                area.innerHTML = '<div class="customer"><p>All sold out! Bake more cookies!</p></div>';
+                return;
+            }
+
+            customers = availableItems.map(emoji => ({
+                emoji,
+                price: (gameData.level * 5) + Math.floor(Math.random() * 10)
+            }));
+
+            area.innerHTML = customers.map((c, i) => `
+                <div class="customer">
+                    <div style="font-size: 3em; margin-bottom: 10px;">👤</div>
+                    <p>"I want ${c.emoji}!"</p>
+                    <button class="btn" onclick="sellTo(${i})">
+                        SELL FOR ${c.price}🪙
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function sellTo(index) {
+            const customer = customers[index];
+
+            if (gameData.inventory[customer.emoji] > 0) {
+                gameData.inventory[customer.emoji]--;
+                gameData.coins += customer.price;
+
+                saveData();
+                updateUI();
+                generateCustomers();
+
+                alert(`✓ Sold for ${customer.price}🪙!`);
+            }
+        }
+
+        function renderUpgrades() {
+            const upgrades = [
+                {
+                    name: '🔥 Faster Oven',
+                    desc: 'Bake 2x faster',
+                    cost: 100,
+                    owned: gameData.upgrades.ovenSpeed > 1,
+                    buy: () => {
+                        if (gameData.coins >= 100 && gameData.upgrades.ovenSpeed === 1) {
+                            gameData.coins -= 100;
+                            gameData.upgrades.ovenSpeed = 2;
+                            saveData();
+                            updateUI();
+                            renderUpgrades();
+                        }
+                    }
+                },
+                {
+                    name: '📦 Bigger Batches',
+                    desc: 'Bake 3 at once',
+                    cost: 150,
+                    owned: gameData.upgrades.batchSize > 1,
+                    buy: () => {
+                        if (gameData.coins >= 150 && gameData.upgrades.batchSize === 1) {
+                            gameData.coins -= 150;
+                            gameData.upgrades.batchSize = 3;
+                            saveData();
+                            updateUI();
+                            renderUpgrades();
+                        }
+                    }
+                }
+            ];
+
+            const list = document.getElementById('upgrades-list');
+            list.innerHTML = upgrades.map((u, i) => `
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <h3>${u.name}</h3>
+                        <p>${u.desc}</p>
+                    </div>
+                    <button class="btn" onclick="buyUpgrade(${i})" ${u.owned ? 'disabled' : ''}>
+                        ${u.owned ? '✓ OWNED' : u.cost + '🪙'}
+                    </button>
+                </div>
+            `).join('');
+
+            window.upgradeFunctions = upgrades.map(u => u.buy);
+        }
+
+        function buyUpgrade(index) {
+            window.upgradeFunctions[index]();
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

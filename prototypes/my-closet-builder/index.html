@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👗 My Closet Builder</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .tab.active { background: #ff6b9d; color: white; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .doll-area {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 400px;
+            position: relative;
+        }
+        .doll-display {
+            font-size: 8em;
+            margin: 20px 0;
+        }
+        .outfit-display {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 3em;
+            margin-top: 20px;
+        }
+        .clothing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        .clothing-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .clothing-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .clothing-item.selected {
+            background: #ff6b9d;
+        }
+        .btn {
+            padding: 15px 30px;
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .btn:hover { background: #ff4081; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
+        .saved-outfit {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .wishlist-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input, select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👗 MY CLOSET BUILDER</h1>
+            <p>Create your perfect outfit!</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('mix-match')">🎨 Mix & Match</button>
+            <button class="tab" onclick="showTab('outfits')">📋 Saved Outfits</button>
+            <button class="tab" onclick="showTab('wishlist')">💭 Wishlist</button>
+        </div>
+
+        <!-- Mix & Match -->
+        <div id="mix-match" class="view active">
+            <div class="doll-area">
+                <h3>Your Outfit</h3>
+                <div class="outfit-display">
+                    <span id="current-top">👕</span>
+                    <span id="current-bottom">👖</span>
+                    <span id="current-shoes">👟</span>
+                </div>
+            </div>
+
+            <h3>Tops</h3>
+            <div class="clothing-grid">
+                <div class="clothing-item" onclick="selectItem('top', '👕')">👕</div>
+                <div class="clothing-item" onclick="selectItem('top', '👚')">👚</div>
+                <div class="clothing-item" onclick="selectItem('top', '🎽')">🎽</div>
+                <div class="clothing-item" onclick="selectItem('top', '🧥')">🧥</div>
+            </div>
+
+            <h3 style="margin-top: 20px;">Bottoms</h3>
+            <div class="clothing-grid">
+                <div class="clothing-item" onclick="selectItem('bottom', '👖')">👖</div>
+                <div class="clothing-item" onclick="selectItem('bottom', '🩳')">🩳</div>
+                <div class="clothing-item" onclick="selectItem('bottom', '👗')">👗</div>
+                <div class="clothing-item" onclick="selectItem('bottom', '🩱')">🩱</div>
+            </div>
+
+            <h3 style="margin-top: 20px;">Shoes</h3>
+            <div class="clothing-grid">
+                <div class="clothing-item" onclick="selectItem('shoes', '👟')">👟</div>
+                <div class="clothing-item" onclick="selectItem('shoes', '👞')">👞</div>
+                <div class="clothing-item" onclick="selectItem('shoes', '🥾')">🥾</div>
+                <div class="clothing-item" onclick="selectItem('shoes', '👠')">👠</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="saveOutfit()">💾 SAVE OUTFIT</button>
+                <button class="btn btn-secondary" onclick="randomOutfit()">🔄 RANDOM</button>
+            </div>
+        </div>
+
+        <!-- Saved Outfits -->
+        <div id="outfits" class="view">
+            <div id="outfits-list"></div>
+        </div>
+
+        <!-- Wishlist -->
+        <div id="wishlist" class="view">
+            <div style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <h3>Add to Wishlist</h3>
+                <input type="text" id="wish-item" placeholder="Item name">
+                <input type="number" id="wish-price" placeholder="Price" step="0.01">
+                <button class="btn" onclick="addWishlistItem()">+ ADD</button>
+            </div>
+            <div id="wishlist-list"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentOutfit = { top: '👕', bottom: '👖', shoes: '👟' };
+        let savedOutfits = [];
+        let wishlist = [];
+
+        function loadData() {
+            const data = localStorage.getItem('closetData');
+            if (data) {
+                const parsed = JSON.parse(data);
+                savedOutfits = parsed.outfits || [];
+                wishlist = parsed.wishlist || [];
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('closetData', JSON.stringify({
+                outfits: savedOutfits,
+                wishlist: wishlist
+            }));
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'outfits') renderOutfits();
+            if (tab === 'wishlist') renderWishlist();
+        }
+
+        function selectItem(type, emoji) {
+            currentOutfit[type] = emoji;
+            document.getElementById(`current-${type}`).textContent = emoji;
+        }
+
+        function randomOutfit() {
+            const tops = ['👕', '👚', '🎽', '🧥'];
+            const bottoms = ['👖', '🩳', '👗', '🩱'];
+            const shoes = ['👟', '👞', '🥾', '👠'];
+
+            selectItem('top', tops[Math.floor(Math.random() * tops.length)]);
+            selectItem('bottom', bottoms[Math.floor(Math.random() * bottoms.length)]);
+            selectItem('shoes', shoes[Math.floor(Math.random() * shoes.length)]);
+        }
+
+        function saveOutfit() {
+            const name = prompt('Name this outfit:');
+            if (!name) return;
+
+            savedOutfits.push({
+                name,
+                ...currentOutfit,
+                date: new Date().toISOString()
+            });
+
+            saveData();
+            alert('✓ Outfit saved!');
+        }
+
+        function renderOutfits() {
+            const container = document.getElementById('outfits-list');
+            if (savedOutfits.length === 0) {
+                container.innerHTML = '<div class="saved-outfit">No saved outfits yet!</div>';
+                return;
+            }
+
+            container.innerHTML = savedOutfits.map((outfit, i) => `
+                <div class="saved-outfit">
+                    <h3>${outfit.name}</h3>
+                    <div style="font-size: 2em; margin: 10px 0;">
+                        ${outfit.top} ${outfit.bottom} ${outfit.shoes}
+                    </div>
+                    <button class="btn btn-secondary" onclick="deleteOutfit(${i})">🗑️ Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteOutfit(index) {
+            if (!confirm('Delete this outfit?')) return;
+            savedOutfits.splice(index, 1);
+            saveData();
+            renderOutfits();
+        }
+
+        function addWishlistItem() {
+            const name = document.getElementById('wish-item').value;
+            const price = document.getElementById('wish-price').value;
+            if (!name || !price) return;
+
+            wishlist.push({ name, price: parseFloat(price) });
+            saveData();
+
+            document.getElementById('wish-item').value = '';
+            document.getElementById('wish-price').value = '';
+            renderWishlist();
+        }
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlist-list');
+            if (wishlist.length === 0) {
+                container.innerHTML = '<div class="wishlist-item">No wishlist items yet!</div>';
+                return;
+            }
+
+            container.innerHTML = wishlist.map((item, i) => `
+                <div class="wishlist-item">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <span>$${item.price.toFixed(2)}</span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="deleteWishItem(${i})">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteWishItem(index) {
+            wishlist.splice(index, 1);
+            saveData();
+            renderWishlist();
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
